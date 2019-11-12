@@ -21,7 +21,8 @@
   		<a-assets id="myAssets">
   		</a-assets>
 
-	  <a-marker-camera type='barcode' value='5'></a-marker-camera>
+	  <a-marker id="myMarker" type='barcode' value='17'></a-marker>
+		<a-entity camera></a-entity>
 	</a-scene>
 		<script>  		
 			console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf...');
@@ -30,7 +31,7 @@
 			model.setAttribute('scale',getUrlParameter('scale')+' '+getUrlParameter('scale')+' '+getUrlParameter('scale'));
 			model.setAttribute('rotation',getUrlParameter('rx')+' '+getUrlParameter('ry')+' '+getUrlParameter('rz'));
 			model.setAttribute('position',getUrlParameter('x')+' '+getUrlParameter('y')+' '+getUrlParameter('z'));
-			document.getElementById("myScene").appendChild(model);
+			document.getElementById("myMarker").appendChild(model);
 		</script>
 </body>
 </html>
