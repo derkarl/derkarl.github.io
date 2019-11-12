@@ -26,8 +26,8 @@
 	</a-scene>
 		<script>  		
 			console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf...');
-			var model=document.createElement("a-gltf-model");
-			model.src='https://derkarl.github.io/'+getUrlParameter('model')+'.gltf';
+			var model=document.createElement("a-entity");
+			model.gltf-model='https://derkarl.github.io/'+getUrlParameter('model')+'.gltf';
 			document.getElementById("myScene").appendChild(model);
 		</script>
 </body>
