@@ -28,6 +28,7 @@
 			console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf...');
 			var model=document.createElement("a-entity");
 			model.setAttribute('gltf-model','https://derkarl.github.io/'+getUrlParameter('model')+'.gltf');
+			model.setAttribute('scale',getUrlParameter('scale')+' '+getUrlParameter('scale')+' 'getUrlParameter('scale'));
 			document.getElementById("myScene").appendChild(model);
 		</script>
 </body>
