@@ -18,9 +18,9 @@
   </head>
 <!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene embedded >
+	<a-scene embedded arjs='sourceType: webcam;'>
   		<a-assets>
-    		<a-asset-item id="myThing" src="">
+    		<a-asset-item id="myThing" src="https://derkarl.github.io/duck.gltf">
   		</a-assets>
 
   		<a-gltf-model src="#myThing"></a-gltf-model>
