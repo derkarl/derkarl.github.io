@@ -29,6 +29,8 @@
 			var model=document.createElement("a-entity");
 			model.setAttribute('gltf-model','https://derkarl.github.io/'+getUrlParameter('model')+'.gltf');
 			model.setAttribute('scale',getUrlParameter('scale')+' '+getUrlParameter('scale')+' '+getUrlParameter('scale'));
+			model.setAttribute('rotation',getUrlParameter('rx')+' '+getUrlParameter('ry')+' '+getUrlParameter('rz'));
+			model.setAttribute('position',getUrlParameter('x')+' '+getUrlParameter('y')+' '+getUrlParameter('z'));
 			document.getElementById("myScene").appendChild(model);
 		</script>
 </body>
