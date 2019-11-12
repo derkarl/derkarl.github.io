@@ -13,8 +13,6 @@
     			var results = regex.exec(location.search);
     			return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 		};
-  		document.getElementById('myThing').src='https://derkarl.github.io/'+getUrlParameter('model')+'.gltf';
-		console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf');
 
 	  </script>
   </head>
@@ -28,5 +26,9 @@
   		<a-gltf-model src="#myThing"></a-gltf-model>
 	  <a-marker-camera preset='hiro'></a-marker-camera>
 	</a-scene>
+		<script>  		document.getElementById('myThing').src='https://derkarl.github.io/'+getUrlParameter('model')+'.gltf';
+		console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf');
+
+		</script>
 </body>
 </html>
