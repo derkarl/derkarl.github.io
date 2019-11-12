@@ -25,7 +25,7 @@
 	  <a-marker-camera preset='hiro'></a-marker-camera>
 	</a-scene>
 		<script>  		
-			console.log('Trying '+url(''+getUrlParameter('model')+'.gltf')+'...');
+			console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf...');
 			var model=document.createElement("a-gltf-model");
 			model.src='https://derkarl.github.io/'+getUrlParameter('model')+'.gltf';
 			document.getElementById("myScene").addChild(model);
