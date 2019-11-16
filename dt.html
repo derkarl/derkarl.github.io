@@ -7,29 +7,62 @@
 <!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
 <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>
 	  <script>AFRAME.registerComponent('getpos',{
     tick: function(time, timeDelta){
-	    var position = new THREE.Vector3();
+	    var positionA = new THREE.Vector3();
+	    var positionB = new THREE.Vector3();
 var quaternion = new THREE.Quaternion();
 var scale = new THREE.Vector3();
+var tubepath="";
+        document.getElementById("plus1").object3D.matrixWorld.decompose( positionA, quaternion, scale );
+		document.getElementById("dist").setAttribute("line","start",positionA.x.toFixed(2)+" "+positionA.y.toFixed(2)+" "+positionA.z.toFixed(2));
+		        document.getElementById("minus1").object3D.matrixWorld.decompose( positionB, quaternion, scale );
+		document.getElementById("dist").setAttribute("line","end",positionB.x.toFixed(2)+" "+positionB.y.toFixed(2)+" "+positionB.z.toFixed(2));
 
-        document.getElementById("plus").object3D.matrixWorld.decompose( position, quaternion, scale );
-	    //console.log(position);
-        document.getElementById("output").setAttribute("text","value",":"+position.x+" "+position.y+" "+position.z+":"); 
     }
 })</script>
+
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene embedded arjs='sourceType: webcam;'>
+	<a-scene id="fieldsim" embedded arjs='sourceType: webcam;'>
 		<a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
-		<a-marker getpos id="plus" preset='hiro'><a-entity id="output" position="1 0 0" scale="3 3 3" text="value: HELLO;color:red"></a-entity></a-marker>
-		<a-marker preset='kanji'><a-text id=outplut text="TEST"></a-text></a-marker>
+		<a-marker getpos id="plus1" preset='hiro'>
+			<a-entity id="output" position="1 0.75 0" scale="3 3 3" text="value: HELLO;color:red"></a-entity>
+			<a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere>
+			<a-entity scale="0.3 0.3 0.3">
+			<a-sphere radius=0.15 position=" 0.57735026918962576451  -1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-1.1547005383792515290    0  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="0.57735026918962576451   1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.93417235896271569645  -1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position=" 1.8683447179254313929    0                      -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.93417235896271569645   1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position=" 0.93417235896271569645  -1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-1.8683447179254313929    0                      0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="0.93417235896271569645   1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.57735026918962576451  -1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position=" 1.1547005383792515290    0  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.57735026918962576451   1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere></a-entity>
+		</a-marker>
+		<a-marker id="minus1" preset='kanji'>
+			<a-entity id="output2" position="1 0.75 0 " scale="3 3 3" text="value: HELLO;color:blue"></a-entity>
+			<a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere>
+			<a-entity scale="0.3 0.3 0.3">
+			<a-sphere radius=0.15 position=" 0.57735026918962576451  -1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-1.1547005383792515290    0  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="0.57735026918962576451   1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.93417235896271569645  -1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position=" 1.8683447179254313929    0                      -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.93417235896271569645   1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position=" 0.93417235896271569645  -1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-1.8683447179254313929    0                      0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="0.93417235896271569645   1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.57735026918962576451  -1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position=" 1.1547005383792515290    0  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
+			<a-sphere radius=0.15 position="-0.57735026918962576451   1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere></a-entity>
+		</a-marker>
+			<a-entity id="dist"line="start: 0, 1, 0; end: 2, 0, -5; color: red"></a-entity>
 		<a-entity camera></a-entity>
-		<a-entity position='0.6 1.3 0' rotation='90 0 0' scale='0.6 0.6 0.6'>
-					<a-animation attribute='rotation' from='15 0 -30' to='-15 0 -30' direction='alternate' dur='500'
-						repeat='indefinite' easing='ease-in-out-cubic'></a-animation>
-					<a-text position='-1 0 0' side='double' value='WebVR included!!' color='orange' shadow='receive: true'></a-text>
-				</a-entity>
 	</a-scene>
 	<div id="debug" style="float:left;background: yellow;padding:10px;margin:10px;border:1px solid red;" >X0X0</div>
 </body>
