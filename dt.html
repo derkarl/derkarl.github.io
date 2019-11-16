@@ -9,7 +9,7 @@
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
 	  <script>AFRAME.registerComponent('getworlddir',{
     tick: function(time, timeDelta){
-        var worldDir = document.getElementById("plus").el.object3D.getWorldPosition(); 
+        var worldDir = document.getElementById("output").el.object3D.getWorldPosition(); 
 	    console.log(worldDir);
         document.getElementById("output").text="value: "+worldDir+";color:red"; 
     }
