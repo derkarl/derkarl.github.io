@@ -7,7 +7,7 @@
 <!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
 <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
-	  <script>AFRAME.registerComponent('getworlddir',{
+	  <script>AFRAME.registerComponent('getpos',{
     tick: function(time, timeDelta){
 	    var position = new THREE.Vector3();
 var quaternion = new THREE.Quaternion();
@@ -22,7 +22,7 @@ var scale = new THREE.Vector3();
 <body style='margin : 0px; overflow: hidden;'>
 	<a-scene embedded arjs='sourceType: webcam;'>
 		<a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
-		<a-marker id="plus" preset='hiro'><a-entity id="output" position="1 0 0" scale="3 3 3" text="value: HELLO;color:red"></a-entity></a-marker>
+		<a-marker getpos id="plus" preset='hiro'><a-entity id="output" position="1 0 0" scale="3 3 3" text="value: HELLO;color:red"></a-entity></a-marker>
 		<a-marker preset='kanji'><a-text id=outplut text="TEST"></a-text></a-marker>
 		<a-entity camera></a-entity>
 		<a-entity position='0.6 1.3 0' rotation='90 0 0' scale='0.6 0.6 0.6'>
