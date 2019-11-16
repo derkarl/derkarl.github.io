@@ -15,7 +15,7 @@ var scale = new THREE.Vector3();
 
         document.getElementById("plus").object3D.matrixWorld.decompose( position, quaternion, scale );
 	    console.log(position);
-        document.getElementById("output").text="value: "+position+";color:red"; 
+        document.getElementById("output").setAttribute("text","value",":"+position+":"); 
     }
 })</script>
   </head>
