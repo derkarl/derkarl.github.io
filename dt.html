@@ -10,7 +10,7 @@
 	  <script>AFRAME.registerComponent('getworlddir',{
     tick: function(time, timeDelta){
         var worldDir = document.getElementById("plus").el.object3D.getWorldPosition(); 
-        document.getElementById("debug").innerHTML=":"+worldDir; 
+        document.getElementById("output").text="ASDKÖ:"+worldDir+":ASDÖLK"; 
     }
 }</script>
   </head>
@@ -19,7 +19,7 @@
 		<a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
 		<a-marker id="plus" preset='hiro'><a-box rotation="0 0 45" position='0 0.5 0' material='opacity: 0.95;'></a-box></a-marker>
 		<a-marker id="minus" preset='hiro'><a-box position='0.5 0.5 0' material='opacity: 0.95;'></a-box></a-marker>
-		<a-marker preset='kanji'><a-box position='0.5 0.5 0' material='opacity: 0.95;'></a-box></a-marker>
+		<a-marker preset='kanji'><a-text id=output text="TEST"></a-text></a-marker>
 		<a-entity camera></a-entity>
 	</a-scene>
 	<div id="debug" style="float:left;background: yellow;padding:10px;margin:10px;border:1px solid red;" >X0X0</div>
