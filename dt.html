@@ -87,7 +87,7 @@ function mkfields(){
       if(myCharge!=0){//marker is visible
       path="lineWidth:"+thickness+";path:"+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
       startl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-       for (var i=0; (i<200&&minimum2(distSquared)>0.24); i++) {
+       for (var i=0; (i<200); i++) {//&&minimum2(distSquared)>0.24
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
             distSquared[k]=worker.distanceToSquared(chargpos[k]);
@@ -115,9 +115,7 @@ function mkfields(){
             distSquared[j]=worker.distanceToSquared(chargpos[j]);
           }
         }
-        for(;i<200;i+=4){
-          fieldlines.children[u].setAttribute("line__"+Math.floor(i/4),"");
-        }
+        
 //        fieldlines.children[u].setAttribute("meshline",path+";color:yellow;");
         fieldlines.children[u].setAttribute("visible","true");
       }else{
