@@ -118,6 +118,8 @@
 	    //cannot use canvas here because it is not created yet at init time
 	    //console.log("canvas res:");
 	    //console.log(this.resolution);
+	    this.geometry.dispose();
+	    this.material.dispose();
 	    var material = new THREE.MeshLineMaterial({
 	      color: new THREE.Color(this.data.color),
 	      resolution: this.resolution,
@@ -140,7 +142,7 @@
 	    var line = new THREE.MeshLine();
 	    line.setGeometry( geometry, widthFn );
 	    this.el.setObject3D('mesh', new THREE.Mesh(line.geometry, material));
-	    geometry.remove();
+
 	  },
 	  
 	  remove: function () {
@@ -164,11 +166,13 @@
 		this.indices_array = [];
 		this.uvs = [];
 
-		this.geometry = new THREE.Geometry();
+		this.geometry = new THREE.BufferGeometry();
 		
 		this.widthCallback = null;
 
 	}
+	
+	
 
 	THREE.MeshLine.prototype.setGeometry = function( g, c ) {
 
