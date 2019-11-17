@@ -98,7 +98,7 @@ function mkfields(){
           }
           totalforce.setLength(step);
           worker.add(totalforce);
-          if (i%5==0&&charges[Math.floor(u/12)]!=0) {
+          if (i%3==0&&charges[Math.floor(u/12)]!=0) {
              path=path+", "+worker.x+ " "+worker.y+" "+worker.z;
              
           }
@@ -119,6 +119,13 @@ AFRAME.registerComponent('sources',{
     var linew=getUrlParameter("lw");
     if(1*linew)thickness=linew;
     markers=this.el.children;
+    var nocol=getUrlParameter("bw");
+    if(1*nocol){
+    console.log("booya!");
+       for(var m of markers){
+          m.children[0].setAttribute("material","color","grey");
+       }
+    }
     numMarkers=this.el.children.length;
     distSquared=new Array(numMarkers);
     var tube=new Array('<a-entity meshline="lineWidth:1;path:0 0 0;color:yellow;"></a-entity>',);
