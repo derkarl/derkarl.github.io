@@ -106,9 +106,11 @@ function mkfields(){
             distSquared[j]=worker.distanceToSquared(chargpos[j]);
           }
         }
+        fieldlines.children[u].object3D.el.remove();
         fieldlines.children[u].setAttribute("meshline",path+";color:yellow;");
         fieldlines.children[u].setAttribute("visible",true);
       }else{
+        fieldlines.children[u].object3D.el.remove();
         fieldlines.children[u].setAttribute("visible","false");
       }
     }
@@ -172,7 +174,7 @@ AFRAME.registerComponent('sources',{
   
   tick: function(){
     tickCount++;
-    tickCount=tickCount%5;
+    tickCount=tickCount%2;
     if(tickCount==0)return;
     var i=0;
     for(var i=0;i<this.el.children.length;i++){
@@ -191,16 +193,16 @@ AFRAME.registerComponent('sources',{
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
+	<a-scene stats fog embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
 		<a-entity sources id="markers">
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 segments-height=8 segments-width=16 theta-length=90 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 segments-height=8 segments-width=16  theta-length=90 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.5 segments-height=8 segments-width=16  theta-length=90 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.5 segments-height=8 segments-width=16  theta-length=90 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.5 segments-height=8 segments-width=16  theta-length=90 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.5 segments-height=8 segments-width=16  theta-length=90 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.5 segments-height=8 segments-width=16 theta-length=90 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.5 segments-height=8 segments-width=16  theta-length=90 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
 		</a-entity>
 		<a-entity id="fieldlines"></a-entity>
 		<a-entity camera></a-entity>
