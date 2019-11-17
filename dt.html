@@ -103,8 +103,8 @@ function mkfields(){
           if (i%4==0&&charges[Math.floor(u/12)]!=0) {
              path=path+", "+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
              endl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-             fieldlines.children[u].setAttribute("line__"+i,'start:'+startl+'end:'+endl+"color:yellow;");
-             if(u==0&&i==0){console.log("line__"+i,'start:'+startl+'end:'+endl+"color:yellow;")}
+             fieldlines.children[u].setAttribute("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;");
+             if(u==0&&i==0){console.log("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;")}
              startl=""+endl;
 //             fieldlines.children[u].components.meshline.data.path[i].x=worker.x;
 //             fieldlines.children[u].components.meshline.data.path[i].y=worker.y;
@@ -114,6 +114,9 @@ function mkfields(){
           for (var j=0; j<chargpos.length; j++) {
             distSquared[j]=worker.distanceToSquared(chargpos[j]);
           }
+        }
+        for(;i<200;i+=4){
+          fieldlines.children[u].setAttribute("line__"+Math.floor(i/4),"");
         }
 //        fieldlines.children[u].setAttribute("meshline",path+";color:yellow;");
         fieldlines.children[u].setAttribute("visible","true");
