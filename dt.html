@@ -109,7 +109,7 @@ AFRAME.registerComponent('sources',{
     markers=this.el.children;
     numMarkers=this.el.children.length;
     distSquared=new Array(numMarkers);
-    var tube=new Array('<a-entity meshline="lineWidth:1;path:0 0 0;color:yellow;"></a-tube>',);
+    var tube=new Array('<a-entity meshline="lineWidth:1;path:0 0 0;color:yellow;"></a-entity>',);
     fieldlines=document.getElementById("fieldlines");
      for(var marker of markers){
        charges.push(0);
