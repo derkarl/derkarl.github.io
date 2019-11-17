@@ -61,6 +61,22 @@ function minimum(arr){
   }
   return m;
 }
+
+function minimum2(arr,tst){
+  var i=0;
+  var m;
+  while(m===undefined&&i<arr.length){
+    m=arr[i];
+    i++;
+  }
+  if(m===undefined)return m;
+  for(;i<arr.length;i++){
+    if(!(Math.min(m,arr[i])===NaN)){m=Math.min(m,arr[i]);}
+  }
+  return m;
+}
+
+
 function mkfields(){
     for (var u=0; u<flsrc.length; u++) {
       worker.copy(flsrc[u]);
@@ -72,7 +88,7 @@ function mkfields(){
       myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
       if(myCharge!=0){//marker is visible
       path="lineWidth:1;path:"+worker.x+ " "+worker.y+" "+worker.z;
-       for (var i=0; (i<200&&minimum(distSquared)>0.24); i++) {
+       for (var i=0; (i<200&&minimum2(distSquared)>0.24); i++) {
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
             distSquared[k]=worker.distanceToSquared(chargpos[k]);
@@ -86,7 +102,7 @@ function mkfields(){
           totalforce.setLength(step);
           worker.add(totalforce);
           if (i%5==0&&charges[Math.floor(u/12)]!=0) {
-             path=path.concat(", "+worker.x+ " "+worker.y+" "+worker.z);
+             path=path+", "+worker.x+ " "+worker.y+" "+worker.z;
              
           }
           for (var j=0; j<chargpos.length; j++) {
