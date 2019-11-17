@@ -8,6 +8,30 @@
 <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>
+<script>
+/**
+ * This is from https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+ * @author Mark Amery https://stackoverflow.com/users/1709587/mark-amery
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+/**
+ * @param {String} HTML representing any number of sibling elements
+ * @return {NodeList} 
+ */
+function htmlToElements(html) {
+    var template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content.childNodes;
+}
+</script>
 	  <script>AFRAME.registerComponent('getpos',{
     tick: function(time, timeDelta){
 	    var positionA = new THREE.Vector3();
@@ -22,48 +46,162 @@ var tubepath="";
 
     }
 })</script>
+<script>
+var chargpos;
+var charges;
+var pos=new THREE.Vector3(0,0,0);
+var scl=new THREE.Vector3(0,0,0);
+var quat=new THREE.Quaternion();
+var flsrc=new Array();
+var distSquared=new Array();
+var numMarkers,myCharge;
+var rl=new THREE.Vector3;
+var worker=new THREE.Vector3();
+var step=.05;
+var tickCount=0;
+var totalforce=new THREE.Vector3();
+var markers=new Array();
+var path="";
+var fieldlines;
+function minimum(arr){
+  var i=0;
+  var m;
+  while(m===undefined&&i<arr.length){
+    m=arr[i];
+  }
+  if(m===undefined)return m;
+  for(;i<arr.length;i++){
+    if(!(Math.min(m,arr[i])===NaN)){m=Math.min(m,arr[i]);}
+  }
+  return m;
+}
+function mkfields(){
+    for (var u=0; u<flsrc.length; u++) {
+        var mNo=Math.floor(u/12);
+        var tubeNo=u%12;
+      worker.copy(flsrc[u]);
+      worker.add(chargpos[Math.floor(u/12)]); //offset by charge
+
+      for (var n=0; n<chargpos.length; n++) {
+        distSquared[n]=worker.distanceToSquared(chargpos[n]);
+      }
+      myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
+      if(myCharge!=0){//marker is visible
+      path=""+worker.x+ " "+worker.y+" "+worker.z;
+       for (var i=0; (i<100&&minimum(distSquared)>0.24); i++) {
+         totalforce.set(0, 0, 0);
+          for (var k=0; k<chargpos.length; k++) {
+            distSquared[k]=worker.distanceToSquared(chargpos[k]);
+            F=1/distSquared[k];
+            rl.copy(worker);
+            rl.sub(chargpos[k]);
+            rl.setLength(F);
+            rl.multiplyScalar(charges[k]*myCharge);
+            totalforce.add(rl);
+          }
+          totalforce.setLength(step);
+          worker.add(totalforce);
+          if (i%2==0&&charges[Math.floor(u/12)]!=0) {
+             path=path.concat(", "+worker.x+ " "+worker.y+" "+worker.z);
+             
+          }
+          for (var j=0; j<chargpos.length; j++) {
+            distSquared[j]=worker.distanceToSquared(chargpos[j]);
+          }
+        }
+        fieldlines.children[u].setAttribute("path",path);
+        fieldlines.children[u].setAttribute("visible",true);
+      }else{
+        fieldlines.children[u].setAttribute("path","");
+        fieldlines.children[u].setAttribute("visible","false");
+      }
+    }
+}
+
+AFRAME.registerComponent('sources',{
+  init: function(){
+    markers=this.el.children;
+    numMarkers=this.el.children.length;
+    distSquared=new Array(numMarkers);
+    var tube=new Array('<a-tube path="0 0 0,0 0 0" visible="false" radius=0.01 material="color:yellow;opacity:0.9;"></a-tube>',);
+    fieldlines=document.getElementById("fieldlines");
+     for(var marker of markers){
+       for(var s of tube){
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+          fieldlines.appendChild(htmlToElement(s));
+
+       }
+       console.log(marker);
+       flsrc.push(new THREE.Vector3( 0.57735026918962576451, -1, -1.5115226281523414610));
+       flsrc.push(new THREE.Vector3(-1.1547005383792515290, 0, -1.5115226281523414610));
+       flsrc.push(new THREE.Vector3( 0.57735026918962576451, 1, -1.5115226281523414610));
+
+       flsrc.push(new THREE.Vector3(-0.93417235896271569645, -1.6180339887498948482, -0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(1.8683447179254313929, 0, -0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(-0.93417235896271569645, 1.6180339887498948482, -0.35682208977308993194));
+
+       flsrc.push(new THREE.Vector3( 0.93417235896271569645, -1.6180339887498948482, 0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(-1.8683447179254313929, 0, 0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(0.93417235896271569645, 1.6180339887498948482, 0.35682208977308993194));
+
+       flsrc.push(new THREE.Vector3(-0.57735026918962576451, -1, 1.5115226281523414610));
+       flsrc.push(new THREE.Vector3(1.1547005383792515290, 0, 1.5115226281523414610));
+       flsrc.push(new THREE.Vector3(-0.57735026918962576451, 1, 1.5115226281523414610));
+    }
+    for(var v of flsrc){
+      v.setLength(0.5);
+    }
+    
+  },
+  
+  tick: function(){
+    tickCount++;
+    tickCount=tickCount%5;
+    if(tickCount==0)return;
+    var i=0;
+    chargpos=new Array();
+    charges=new Array();
+    for(var marker of this.el.children){
+       if(marker.getAttribute("visible")==true){
+         marker.object3D.matrixWorld.decompose( pos,quat,scl );
+         chargpos.push(new THREE.Vector3(pos.x,pos.y,pos.z));
+         charges.push(marker.getAttribute("charge"));
+       }else{
+         charges.push(0);
+         chargpos.push(new THREE.Vector3(1e6,1e6,1e6));
+       }
+    }
+    mkfields();
+  }
+})
+</script>
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene id="fieldsim" embedded arjs='sourceType: webcam;'>
-		<a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
-		<a-marker getpos id="plus1" preset='hiro'>
-			<a-entity id="output" position="1 0.75 0" scale="3 3 3" text="value: HELLO;color:red"></a-entity>
+	<a-scene id="fieldsim" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
+		<a-entity sources id="markers">
+		<a-marker getpos charge=-1 id="plus1" preset='hiro'>
 			<a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere>
-			<a-entity scale="0.3 0.3 0.3">
-			<a-sphere radius=0.15 position=" 0.57735026918962576451  -1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-1.1547005383792515290    0  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="0.57735026918962576451   1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.93417235896271569645  -1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position=" 1.8683447179254313929    0                      -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.93417235896271569645   1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position=" 0.93417235896271569645  -1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-1.8683447179254313929    0                      0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="0.93417235896271569645   1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.57735026918962576451  -1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position=" 1.1547005383792515290    0  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.57735026918962576451   1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere></a-entity>
+			
+			
 		</a-marker>
-		<a-marker id="minus1" preset='kanji'>
-			<a-entity id="output2" position="1 0.75 0 " scale="3 3 3" text="value: HELLO;color:blue"></a-entity>
+		<a-marker id="minus1" charge=1 preset='kanji'>
 			<a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere>
-			<a-entity scale="0.3 0.3 0.3">
-			<a-sphere radius=0.15 position=" 0.57735026918962576451  -1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-1.1547005383792515290    0  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="0.57735026918962576451   1  -1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.93417235896271569645  -1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position=" 1.8683447179254313929    0                      -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.93417235896271569645   1.6180339887498948482  -0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position=" 0.93417235896271569645  -1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-1.8683447179254313929    0                      0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="0.93417235896271569645   1.6180339887498948482  0.35682208977308993194" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.57735026918962576451  -1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position=" 1.1547005383792515290    0  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere>
-			<a-sphere radius=0.15 position="-0.57735026918962576451   1  1.5115226281523414610" material="color:green;opacity:1;"></a-sphere></a-entity>
 		</a-marker>
+		</a-entity>
 			<a-entity id="dist"line="start: 0, 1, 0; end: 2, 0, -5; color: red"></a-entity>
+			<a-entity id="fieldlines"></a-entity>
 		<a-entity camera></a-entity>
 	</a-scene>
-	<div id="debug" style="float:left;background: yellow;padding:10px;margin:10px;border:1px solid red;" >X0X0</div>
 </body>
 </html>
