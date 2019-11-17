@@ -35,7 +35,8 @@ function htmlToElements(html) {
 </script>
 
 <script>
-var chargpos;
+var chargpos=new Array();
+var charges=new Array();
 var charges;
 var pos=new THREE.Vector3(0,0,0);
 var scl=new THREE.Vector3(0,0,0);
@@ -65,8 +66,6 @@ function minimum(arr){
 }
 function mkfields(){
     for (var u=0; u<flsrc.length; u++) {
-        var mNo=Math.floor(u/12);
-        var tubeNo=u%12;
       worker.copy(flsrc[u]);
       worker.add(chargpos[Math.floor(u/12)]); //offset by charge
 
@@ -113,6 +112,8 @@ AFRAME.registerComponent('sources',{
     var tube=new Array('<a-entity meshline="lineWidth:1;path:0 0 0;color:yellow;"></a-tube>',);
     fieldlines=document.getElementById("fieldlines");
      for(var marker of markers){
+       charges.push(0);
+       chargpos.push(new THREE.Vector3(0,0,0));
        for(var s of tube){
           fieldlines.appendChild(htmlToElement(s));
           fieldlines.appendChild(htmlToElement(s));
@@ -128,7 +129,6 @@ AFRAME.registerComponent('sources',{
           fieldlines.appendChild(htmlToElement(s));
 
        }
-       console.log(marker);
        flsrc.push(new THREE.Vector3( 0.57735026918962576451, -1, -1.5115226281523414610));
        flsrc.push(new THREE.Vector3(-1.1547005383792515290, 0, -1.5115226281523414610));
        flsrc.push(new THREE.Vector3( 0.57735026918962576451, 1, -1.5115226281523414610));
@@ -156,16 +156,14 @@ AFRAME.registerComponent('sources',{
     tickCount=tickCount%5;
     if(tickCount==0)return;
     var i=0;
-    chargpos=new Array();
-    charges=new Array();
-    for(var marker of this.el.children){
-       if(marker.getAttribute("visible")==true){
-         marker.object3D.matrixWorld.decompose( pos,quat,scl );
-         chargpos.push(new THREE.Vector3(pos.x,pos.y,pos.z));
-         charges.push(marker.getAttribute("charge"));
+    for(var i=0;i<this.el.children.length;i++){
+       if(this.el.children[i].getAttribute("visible")==true){
+         this.el.children[i].object3D.matrixWorld.decompose( pos,quat,scl );
+         chargpos[i].set(pos.x,pos.y,pos.z);
+         charges[i]=(this.el.children[i].getAttribute("charge"));
        }else{
-         charges.push(0);
-         chargpos.push(new THREE.Vector3(1e6,1e6,1e6));
+         charges[i]=0;
+         chargpos[i].set(1e6,1e6,1e6);
        }
     }
     mkfields();
