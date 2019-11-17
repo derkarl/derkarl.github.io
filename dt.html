@@ -51,7 +51,7 @@ var distSquared=new Array();
 var numMarkers,myCharge;
 var rl=new THREE.Vector3;
 var worker=new THREE.Vector3();
-var step=.05;
+var step=.1;
 var tickCount=0;
 var totalforce=new THREE.Vector3();
 var markers=new Array();
@@ -78,6 +78,7 @@ function mkfields(){
     for (var u=0; u<flsrc.length; u++) {
       worker.copy(flsrc[u]);
       worker.add(chargpos[Math.floor(u/12)]); //offset by charge
+      fieldlines.children[u].object3D.remove();
 
       for (var n=0; n<chargpos.length; n++) {
         distSquared[n]=worker.distanceToSquared(chargpos[n]);
@@ -98,8 +99,11 @@ function mkfields(){
           }
           totalforce.setLength(step);
           worker.add(totalforce);
-          if (i%3==0&&charges[Math.floor(u/12)]!=0) {
-             path=path+", "+worker.x+ " "+worker.y+" "+worker.z;
+          if (i%5==0&&charges[Math.floor(u/12)]!=0) {
+             path=path+", "+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
+//             fieldlines.children[u].components.meshline.data.path[i].x=worker.x;
+//             fieldlines.children[u].components.meshline.data.path[i].y=worker.y;
+//             fieldlines.children[u].components.meshline.data.path[i].z=worker.z;
              
           }
           for (var j=0; j<chargpos.length; j++) {
@@ -107,7 +111,7 @@ function mkfields(){
           }
         }
         fieldlines.children[u].setAttribute("meshline",path+";color:yellow;");
-        fieldlines.children[u].setAttribute("visible",true);
+        fieldlines.children[u].setAttribute("visible","true");
       }else{
         fieldlines.children[u].setAttribute("visible","false");
       }
@@ -121,14 +125,14 @@ AFRAME.registerComponent('sources',{
     markers=this.el.children;
     var nocol=getUrlParameter("bw");
     if(1*nocol){
-    console.log("booya!");
        for(var m of markers){
           m.children[0].setAttribute("material","color","grey");
        }
     }
     numMarkers=this.el.children.length;
     distSquared=new Array(numMarkers);
-    var tube=new Array('<a-entity meshline="lineWidth:1;path:0 0 0;color:yellow;"></a-entity>',);
+    var startPath="0 0 0";
+    var tube=new Array('<a-entity meshline="lineWidth:1;color:yellow;"></a-entity>',);
     fieldlines=document.getElementById("fieldlines");
      for(var marker of markers){
        charges.push(0);
