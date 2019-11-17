@@ -106,11 +106,9 @@ function mkfields(){
             distSquared[j]=worker.distanceToSquared(chargpos[j]);
           }
         }
-        fieldlines.children[u].object3D.el.remove();
         fieldlines.children[u].setAttribute("meshline",path+";color:yellow;");
         fieldlines.children[u].setAttribute("visible",true);
       }else{
-        fieldlines.children[u].object3D.el.remove();
         fieldlines.children[u].setAttribute("visible","false");
       }
     }
