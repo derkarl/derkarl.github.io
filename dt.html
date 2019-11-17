@@ -38,9 +38,6 @@ function htmlToElements(html) {
 var chargpos=new Array();
 var charges=new Array();
 var charges;
-var pos=new THREE.Vector3(0,0,0);
-var scl=new THREE.Vector3(0,0,0);
-var quat=new THREE.Quaternion();
 var flsrc=new Array();
 var distSquared=new Array();
 var numMarkers,myCharge;
@@ -158,12 +155,11 @@ AFRAME.registerComponent('sources',{
     var i=0;
     for(var i=0;i<this.el.children.length;i++){
        if(this.el.children[i].getAttribute("visible")==true){
-         this.el.children[i].object3D.matrixWorld.decompose( pos,quat,scl );
-         chargpos[i].set(pos.x,pos.y,pos.z);
+         chargpos[i].copy(this.el.children[i].object3D.getWorldPosition());
          charges[i]=(this.el.children[i].getAttribute("charge"));
        }else{
          charges[i]=0;
-         chargpos[i].set(1e6,1e6,1e6);
+         chargpos[i].set(0,0,0);
        }
     }
     mkfields();
