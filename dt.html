@@ -33,20 +33,7 @@ function htmlToElements(html) {
     return template.content.childNodes;
 }
 </script>
-	  <script>AFRAME.registerComponent('getpos',{
-    tick: function(time, timeDelta){
-//	    var positionA = new THREE.Vector3();
-//	    var positionB = new THREE.Vector3();
-//var quaternion = new THREE.Quaternion();
-//var scale = new THREE.Vector3();
-//var tubepath="";
- //       document.getElementById("plus1").object3D.matrixWorld.decompose( positionA, quaternion, scale );
-//		document.getElementById("dist").setAttribute("line","start",positionA.x.toFixed(2)+" "+positionA.y.toFixed(2)+" "+positionA.z.toFixed(2));
-//		        document.getElementById("minus1").object3D.matrixWorld.decompose( positionB, quaternion, scale );
-//		document.getElementById("dist").setAttribute("line","end",positionB.x.toFixed(2)+" "+positionB.y.toFixed(2)+" "+positionB.z.toFixed(2));
 
-    }
-})</script>
 <script>
 var chargpos;
 var charges;
@@ -88,7 +75,7 @@ function mkfields(){
       }
       myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
       if(myCharge!=0){//marker is visible
-      path="lineWidth:3;path:"+worker.x+ " "+worker.y+" "+worker.z;
+      path="lineWidth:1;path:"+worker.x+ " "+worker.y+" "+worker.z;
        for (var i=0; (i<200&&minimum(distSquared)>0.24); i++) {
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
@@ -102,7 +89,7 @@ function mkfields(){
           }
           totalforce.setLength(step);
           worker.add(totalforce);
-          if (i%2==0&&charges[Math.floor(u/12)]!=0) {
+          if (i%5==0&&charges[Math.floor(u/12)]!=0) {
              path=path.concat(", "+worker.x+ " "+worker.y+" "+worker.z);
              
           }
@@ -123,7 +110,6 @@ AFRAME.registerComponent('sources',{
     markers=this.el.children;
     numMarkers=this.el.children.length;
     distSquared=new Array(numMarkers);
-//    var tube=new Array('<a-tube path="0 0 0,0 0 0" visible="false" radius=0.01 material="color:yellow;opacity:0.9;"></a-tube>',);
     var tube=new Array('<a-entity meshline="lineWidth:1;path:0 0 0;color:yellow;"></a-tube>',);
     fieldlines=document.getElementById("fieldlines");
      for(var marker of markers){
@@ -189,7 +175,7 @@ AFRAME.registerComponent('sources',{
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene id="fieldsim" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
+	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
 		<a-entity sources id="markers">
 	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
 	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
@@ -200,8 +186,7 @@ AFRAME.registerComponent('sources',{
 	 	 <a-marker id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.5 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
 	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.5 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
 		</a-entity>
-			<a-entity id="dist"line="start: 0, 1, 0; end: 2, 0, -5; color: red"></a-entity>
-			<a-entity id="fieldlines"></a-entity>
+		<a-entity id="fieldlines"></a-entity>
 		<a-entity camera></a-entity>
 	</a-scene>
 </body>
