@@ -9,6 +9,14 @@
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>
 <script src="https://rawgit.com/andreasplesch/aframe-meshline-component/master/dist/aframe-meshline-component.min.js"></script>
+ <script>
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+ </script>
 <script>
 /**
  * This is from https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
@@ -49,20 +57,9 @@ var totalforce=new THREE.Vector3();
 var markers=new Array();
 var path="";
 var fieldlines;
-function minimum(arr){
-  var i=0;
-  var m;
-  while(m===undefined&&i<arr.length){
-    m=arr[i];
-  }
-  if(m===undefined)return m;
-  for(;i<arr.length;i++){
-    if(!(Math.min(m,arr[i])===NaN)){m=Math.min(m,arr[i]);}
-  }
-  return m;
-}
+var thickness=1;
 
-function minimum2(arr,tst){
+function minimum2(arr){
   var i=0;
   var m;
   while(m===undefined&&i<arr.length){
@@ -87,7 +84,7 @@ function mkfields(){
       }
       myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
       if(myCharge!=0){//marker is visible
-      path="lineWidth:1;path:"+worker.x+ " "+worker.y+" "+worker.z;
+      path="lineWidth:"+thickness+";path:"+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
        for (var i=0; (i<200&&minimum2(distSquared)>0.24); i++) {
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
@@ -119,6 +116,8 @@ function mkfields(){
 
 AFRAME.registerComponent('sources',{
   init: function(){
+    var linew=getUrlParameter("lw");
+    if(1*linew)thickness=linew;
     markers=this.el.children;
     numMarkers=this.el.children.length;
     distSquared=new Array(numMarkers);
