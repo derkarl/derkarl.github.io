@@ -202,7 +202,7 @@ AFRAME.registerComponent('sources',{
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene stats embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
+	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
 		<a-entity sources id="markers">
 	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
 	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
