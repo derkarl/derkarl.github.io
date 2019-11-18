@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <title>Titel</title>
 <!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
-<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
-<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>
+<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+<!-- <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/ar.js@2.0.8/aframe/build/aframe-ar.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>-->
 <script src="mline.js"></script>
  <script>
 function getUrlParameter(name) {
@@ -131,8 +132,7 @@ AFRAME.registerComponent('sources',{
     numMarkers=this.el.children.length;
     distSquared=new Array(numMarkers);
     var startPath="path: 0 0 0,1 1 1";
-//    var tube=new Array('<a-entity mline='"+startPath+';color:yellow;"></a-entity>',);
-    var tube=new Array('<a-entity mline></a-entity>',);
+    var tube=new Array('<a-entity mline="path:0 0 0,1 1 1;visible:true;color:white;"></a-entity>',);
     fieldlines=document.getElementById("fieldlines");
      for(var marker of markers){
        charges.push(0);
@@ -181,7 +181,7 @@ AFRAME.registerComponent('sources',{
     var i=0;
     for(var i=0;i<this.el.children.length;i++){
        if(this.el.children[i].getAttribute("visible")==true){
-         chargpos[i].copy(this.el.children[i].object3D.getWorldPosition());
+         chargpos[i].copy(this.el.children[i].object3D.getWorldPosition(new THREE.Vector3()));
          charges[i]=(this.el.children[i].getAttribute("charge"));
        }else{
          charges[i]=0;
@@ -195,7 +195,7 @@ AFRAME.registerComponent('sources',{
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
+	<a-scene stats embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
 		<a-entity sources id="markers">
 	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
 	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
