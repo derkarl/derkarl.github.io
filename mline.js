@@ -22,6 +22,7 @@ AFRAME.registerComponent('mline', {
 	},
     color: {type: 'color', default: '#74BEC1'},
     opacity: {type: 'number', default: 1},
+	maxsegments: {type: 'number', default: 100},
     visible: {default: true}
   },
 
@@ -31,6 +32,7 @@ AFRAME.registerComponent('mline', {
     var data = this.data;
     var geometry;
     var material;
+	var maxsegments=data.maxsegments;
     this.rendererSystem = this.el.sceneEl.systems.renderer;
     material = this.material = new THREE.LineBasicMaterial({
       color: data.color,
@@ -40,7 +42,7 @@ AFRAME.registerComponent('mline', {
     });
     geometry = this.geometry = new THREE.BufferGeometry();
 	/* ACHTUNG: 200 als fixe Größe! */
-    geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(data.path.length * 3), 3));
+    geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(maxsegments * 3), 3));
 
 //    this.rendererSystem.applyColorCorrection(material.color);
     this.line = new THREE.Line(geometry, material);
@@ -53,37 +55,32 @@ AFRAME.registerComponent('mline', {
     var geoNeedsUpdate = false;
     var material = this.material;
     var positionArray = geometry.attributes.position.array;
-	
-	if(data.path.length!=oldData.path.length){
+/*	if(data.path.length*3!=positionArray.length){
 		this.material.dispose();
 		this.geometry.dispose();
-		this.remove();
+//		this.remove();
 		this.init();
-	} //später testen!
+	} //später testen!*/
 	
     // Update geometry.
 	var dataArray=new Array(3);
-	for(var cnt=0;cnt<positionArray.length;cnt+=3){
-		var idx=cnt/3;
-		if(idx<data.path.length){
+	var cnt=0;
+	for(var idx=0;(idx<data.path.length&&cnt<positionArray.length-2);idx++){
+		cnt=3*idx;
 		dataArray=data.path[idx].split(' ');
-		
 			positionArray[cnt]=dataArray[0];
 			positionArray[cnt+1]=dataArray[1];
 			positionArray[cnt+2]=dataArray[2];
-		}else{
-		dataArray=data.path[data.path.length-1].split(' ');
-			positionArray[cnt]=dataArray[0];
-			positionArray[cnt+1]=dataArray[1];
-			positionArray[cnt+2]=dataArray[2];
-		}
+	}
+	for(;cnt<positionArray.length-2;cnt++){
+			positionArray[cnt]=positionArray[cnt-3];
+			positionArray[cnt+1]=positionArray[cnt-2];
+			positionArray[cnt+2]=positionArray[cnt-1];
 	}
 	geoNeedsUpdate=true;
-    
 
     if (geoNeedsUpdate) {
       geometry.attributes.position.needsUpdate = true;
-      geometry.computeBoundingSphere();
     }
 
     material.color.setStyle(data.color);
