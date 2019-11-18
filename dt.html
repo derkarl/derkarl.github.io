@@ -51,7 +51,7 @@ var distSquared=new Array();
 var numMarkers,myCharge;
 var rl=new THREE.Vector3;
 var worker=new THREE.Vector3();
-var step=.05;
+var step=.1;
 var tickCount=0;
 var totalforce=new THREE.Vector3();
 var markers=new Array();
@@ -85,10 +85,8 @@ function mkfields(){
       }
       myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
       if(myCharge!=0){//marker is visible
-//      path="lineWidth:"+thickness+";path:"+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
-      path=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
-   //   startl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-       for (var i=0; (i<200); i++) {//&&minimum2(distSquared)>0.24
+      path=""+worker.x+ " "+worker.y+" ";
+       for (var i=0; (i<200&&minimum2(distSquared)>0.24); i++) {//&&minimum2(distSquared)>0.24
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
             distSquared[k]=worker.distanceToSquared(chargpos[k]);
@@ -102,15 +100,7 @@ function mkfields(){
           totalforce.setLength(step);
           worker.add(totalforce);
           if (i%1==0&&charges[Math.floor(u/12)]!=0) {
-             path=path+", "+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
-             endl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-   //          fieldlines.children[u].setAttribute("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;");
-//             if(u==0&&i==0){console.log("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;")}
-   //          startl=""+endl;
-//             fieldlines.children[u].components.meshline.data.path[i].x=worker.x;
-//             fieldlines.children[u].components.meshline.data.path[i].y=worker.y;
-//             fieldlines.children[u].components.meshline.data.path[i].z=worker.z;
-             
+             path=path+", "+worker.x+ " "+worker.y+" "+worker.z;
           }
           for (var j=0; j<chargpos.length; j++) {
             distSquared[j]=worker.distanceToSquared(chargpos[j]);

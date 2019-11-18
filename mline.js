@@ -1,4 +1,8 @@
-
+/**shameless hack of line.js from the aframe github repo (19/11/18)
+ *
+ * @author derkarl (Karl Probst)
+ * License: MIT (same as aframe)
+ */
 AFRAME.registerComponent('mline', {
   schema: {
     path: { //eingepflegt von meshline.js
@@ -36,7 +40,7 @@ AFRAME.registerComponent('mline', {
     });
     geometry = this.geometry = new THREE.BufferGeometry();
 	/* ACHTUNG: 200 als fixe Größe! */
-    geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(200 * 3), 3));
+    geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(data.path.length * 3), 3));
 
 //    this.rendererSystem.applyColorCorrection(material.color);
     this.line = new THREE.Line(geometry, material);
@@ -50,10 +54,12 @@ AFRAME.registerComponent('mline', {
     var material = this.material;
     var positionArray = geometry.attributes.position.array;
 	
-/*	if(data.path.length!=oldData.path.length){
+	if(data.path.length!=oldData.path.length){
+		this.material.dispose();
+		this.geometry.dispose();
 		this.remove();
 		this.init();
-	}*/ //später testen!
+	} //später testen!
 	
     // Update geometry.
 	var dataArray=new Array(3);
@@ -91,8 +97,3 @@ AFRAME.registerComponent('mline', {
     this.el.removeObject3D('line', this.line);
   }
 });
-
-function isEqualVec3 (a, b) {
-  if (!a || !b) { return false; }
-  return (a.x === b.x && a.y === b.y && a.z === b.z);
-}
