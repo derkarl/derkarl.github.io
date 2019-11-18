@@ -8,7 +8,7 @@
 <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>
-
+<script src="mline.js"></script>
  <script>
 function getUrlParameter(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -51,7 +51,7 @@ var distSquared=new Array();
 var numMarkers,myCharge;
 var rl=new THREE.Vector3;
 var worker=new THREE.Vector3();
-var step=.1;
+var step=.05;
 var tickCount=0;
 var totalforce=new THREE.Vector3();
 var markers=new Array();
@@ -86,8 +86,9 @@ function mkfields(){
       myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
       if(myCharge!=0){//marker is visible
 //      path="lineWidth:"+thickness+";path:"+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
-      startl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-       for (var i=0; (i<120); i++) {//&&minimum2(distSquared)>0.24
+      path=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
+   //   startl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
+       for (var i=0; (i<200); i++) {//&&minimum2(distSquared)>0.24
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
             distSquared[k]=worker.distanceToSquared(chargpos[k]);
@@ -100,12 +101,12 @@ function mkfields(){
           }
           totalforce.setLength(step);
           worker.add(totalforce);
-          if (i%4==0&&charges[Math.floor(u/12)]!=0) {
- //            path=path+", "+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
+          if (i%1==0&&charges[Math.floor(u/12)]!=0) {
+             path=path+", "+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
              endl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-             fieldlines.children[u].setAttribute("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;");
+   //          fieldlines.children[u].setAttribute("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;");
 //             if(u==0&&i==0){console.log("line__"+Math.floor(i/4),'start:'+startl+'end:'+endl+"color:yellow;")}
-             startl=""+endl;
+   //          startl=""+endl;
 //             fieldlines.children[u].components.meshline.data.path[i].x=worker.x;
 //             fieldlines.children[u].components.meshline.data.path[i].y=worker.y;
 //             fieldlines.children[u].components.meshline.data.path[i].z=worker.z;
@@ -117,6 +118,8 @@ function mkfields(){
         }
         
 //        fieldlines.children[u].setAttribute("meshline",path+";color:yellow;");
+			   fieldlines.children[u].setAttribute("mline","path:"+path+";color:yellow;");
+			   
         fieldlines.children[u].setAttribute("visible","true");
       }else{
         fieldlines.children[u].setAttribute("visible","false");
@@ -139,7 +142,7 @@ AFRAME.registerComponent('sources',{
     distSquared=new Array(numMarkers);
     var startPath="path: 0 0 0";
 //    var tube=new Array('<a-entity meshline="lineWidth:1;'+startPath+';color:yellow;"></a-entity>',);
-    var tube=new Array('<a-entity></a-entity>',);
+    var tube=new Array('<a-entity mline></a-entity>',);
     fieldlines=document.getElementById("fieldlines");
      for(var marker of markers){
        charges.push(0);
@@ -202,7 +205,7 @@ AFRAME.registerComponent('sources',{
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
+	<a-scene stats embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'>
 		<a-entity sources id="markers">
 	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
 	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
