@@ -87,7 +87,7 @@ function mkfields(){
       if(myCharge!=0){//marker is visible
       path="lineWidth:"+thickness+";path:"+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3);
       startl=""+worker.x.toFixed(3)+ " "+worker.y.toFixed(3)+" "+worker.z.toFixed(3)+";";
-       for (var i=0; (i<200); i++) {//&&minimum2(distSquared)>0.24
+       for (var i=0; (i<156); i++) {//&&minimum2(distSquared)>0.24
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
             distSquared[k]=worker.distanceToSquared(chargpos[k]);
