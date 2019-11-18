@@ -7,8 +7,8 @@ AFRAME.registerComponent('mline', {
   schema: {
     path: { //eingepflegt von meshline.js
 		default: [
-	        "-0.5 0 0",
-	        "0.5 0 0"
+	        "-2 -0.8 -10",
+	        "2 0.8 -5"
 	      ],
 	      // Deserialize path in the form of comma-separated vec3s: `0 0 0, 1 1 1, 2 0 3`.
 /*	      parse: function (value) {
@@ -23,10 +23,11 @@ AFRAME.registerComponent('mline', {
     color: {type: 'color', default: '#74BEC1'},
     opacity: {type: 'number', default: 1},
 	maxsegments: {type: 'number', default: 100},
-    visible: {default: true}
+    visible: {default: true},
+	label: { default: "ad" },
   },
 
-  multiple: false, //the whole point!
+  multiple: true, //the whole point!
 
   init: function () {
     var data = this.data;
@@ -44,7 +45,7 @@ AFRAME.registerComponent('mline', {
 	/* ACHTUNG: 200 als fixe Größe! */
     geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(maxsegments * 3), 3));
 
-//    this.rendererSystem.applyColorCorrection(material.color);
+    this.el.sceneEl.systems.renderer.applyColorCorrection(material.color);
     this.line = new THREE.Line(geometry, material);
     this.el.setObject3D(this.attrName, this.line);
   },
@@ -55,6 +56,7 @@ AFRAME.registerComponent('mline', {
     var geoNeedsUpdate = false;
     var material = this.material;
     var positionArray = geometry.attributes.position.array;
+	console.log("entered!");
 /*	if(data.path.length*3!=positionArray.length){
 		this.material.dispose();
 		this.geometry.dispose();
@@ -78,13 +80,13 @@ AFRAME.registerComponent('mline', {
 			positionArray[cnt+2]=positionArray[cnt-1];
 	}
 	geoNeedsUpdate=true;
-
+    console.log(cnt+"for"+data.label);
     if (geoNeedsUpdate) {
       geometry.attributes.position.needsUpdate = true;
     }
 
     material.color.setStyle(data.color);
-//    this.rendererSystem.applyColorCorrection(material.color);
+    this.el.sceneEl.systems.renderer.applyColorCorrection(material.color);
     material.opacity = data.opacity;
     material.transparent = data.opacity < 1;
     material.visible = data.visible;
