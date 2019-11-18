@@ -22,7 +22,7 @@ AFRAME.registerComponent('mline', {
 	},
     color: {type: 'color', default: '#74BEC1'},
     opacity: {type: 'number', default: 1},
-	maxsegments: {type: 'number', default: 100},
+	maxsegments: {type: 'number', default: 200},
     visible: {default: true},
 	label: { default: "ad" },
   },
@@ -39,6 +39,7 @@ AFRAME.registerComponent('mline', {
       color: data.color,
       opacity: data.opacity,
       transparent: data.opacity < 1,
+	  linewidth: 2,
       visible: data.visible
     });
     geometry = this.geometry = new THREE.BufferGeometry();
