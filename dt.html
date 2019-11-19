@@ -87,7 +87,7 @@ function mkfields(){
       myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
       if(myCharge!=0){//marker is visible
       path=""+worker.x.toFixed(4)+ " "+worker.y.toFixed(4)+" "+worker.z.toFixed(4);
-       for (var i=0; (i<200&&minimum2(distSquared)>0.24); i++) {//&&minimum2(distSquared)>0.24
+       for (var i=0; (i<200&&minimum2(distSquared)>0.08); i++) {//&&minimum2(distSquared)>0.24
          totalforce.set(0, 0, 0);
           for (var k=0; k<chargpos.length; k++) {
             distSquared[k]=worker.distanceToSquared(chargpos[k]);
@@ -152,7 +152,7 @@ AFRAME.registerComponent('sources',{
        flsrc.push(new THREE.Vector3(-0.57735026918962576451, 1, 1.5115226281523414610));
     }
     for(var v of flsrc){
-      v.setLength(0.5);
+      v.setLength(0.3);
     }
     
   },
@@ -180,17 +180,19 @@ AFRAME.registerComponent('sources',{
 <body style='margin : 0px; overflow: hidden;'>
 	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63'><!-- 4x4_BCH_13_5_5 -->
 		<a-entity sources id="markers">
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.5 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.5 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.5 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
 		</a-entity>
 		<a-entity id="fieldline" mline="label:'gt';path: -200 -0.8 -10,-200 0.8 -5,-200 0.8 -5;color:red;opacity:1;visible:false;"></a-entity>
 		<a-entity camera></a-entity>
+		<a-entity light="type: ambient; color: #DDD"></a-entity>
+		<a-entity light="type: directional; color: #DFD; intensity: 0.8" position="-0.5 1 1"></a-entity>
 	</a-scene>
 </body>
 </html>
