@@ -17,12 +17,16 @@
   </head>
 <!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene id="myScene" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
+	<a-scene id="myScene" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_5_5;'>
   		<a-assets id="myAssets">
   		</a-assets>
 
-	  <a-marker id="myMarker" type='barcode' value='17'></a-marker>
+	  <a-marker id="myMarker" type='barcode' value='3'>		
+	<!--  <a-plane position="0 -0.1 0" rotation="-90 0 0" color="#EEE" opacity="0.5" width="8.1" height="5.6"></a-plane>-->
+</a-marker>
 		<a-entity camera></a-entity>
+		<a-entity light="type: ambient; color: #FFF; intensity:1"></a-entity>
+		<a-entity light="type: directional; color: #FFF; intensity: 1" position="-0.5 1 1"></a-entity>
 	</a-scene>
 		<script>  		
 			console.log('Trying https://derkarl.github.io/'+getUrlParameter('model')+'.gltf...');
