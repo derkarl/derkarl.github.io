@@ -57,7 +57,7 @@ AFRAME.registerComponent('mline', {
     var geoNeedsUpdate = false;
     var material = this.material;
     var positionArray = geometry.attributes.position.array;
-	console.log("entered!");
+	//console.log("entered!");
 /*	if(data.path.length*3!=positionArray.length){
 		this.material.dispose();
 		this.geometry.dispose();
@@ -81,7 +81,7 @@ AFRAME.registerComponent('mline', {
 			positionArray[cnt+2]=positionArray[cnt-1];
 	}
 	geoNeedsUpdate=true;
-    console.log(cnt+"for"+data.label);
+  //  console.log(cnt+"for"+data.label);
     if (geoNeedsUpdate) {
       geometry.attributes.position.needsUpdate = true;
     }

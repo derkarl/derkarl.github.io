@@ -2,7 +2,7 @@
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <title>a-frame.js test</title>
 	<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
 	<script src="https://raw.githack.com/jeromeetienne/AR.js/2.0.5/aframe/build/aframe-ar.js"></script>
@@ -17,11 +17,11 @@
   </head>
 <!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene id="myScene" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_5_5;'>
+	<a-scene id="myScene" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63;'><!-- 4x4_BCH_13_5_5 -->
   		<a-assets id="myAssets">
   		</a-assets>
 
-	  <a-marker id="myMarker" type='barcode' value='3'>		
+	  <a-marker id="myMarker" type='barcode' value='3' smooth="true">		
 	<!--  <a-plane position="0 -0.1 0" rotation="-90 0 0" color="#EEE" opacity="0.5" width="8.1" height="5.6"></a-plane>-->
 </a-marker>
 		<a-entity camera></a-entity>

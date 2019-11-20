@@ -180,14 +180,14 @@ AFRAME.registerComponent('sources',{
 <body style='margin : 0px; overflow: hidden;'>
 	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63'><!-- 4x4_BCH_13_5_5 -->
 		<a-entity sources id="markers">
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
-	 	 <a-marker id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
 		</a-entity>
 		<a-entity id="fieldline" mline="label:'gt';path: -200 -0.8 -10,-200 0.8 -5,-200 0.8 -5;color:red;opacity:1;visible:false;"></a-entity>
 		<a-entity camera></a-entity>
