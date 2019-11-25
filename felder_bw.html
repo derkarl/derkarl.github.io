@@ -9,7 +9,6 @@
 <!-- <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/ar.js@2.0.8/aframe/build/aframe-ar.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>-->
-<script src="aframe-look-at-billboard-component.min.js"></script>
 <script src="mline.js"></script>
  <script>
 function getUrlParameter(name) {
@@ -108,7 +107,9 @@ function mkfields(){
             distSquared[j]=worker.distanceToSquared(chargpos[j]);
           }
         }
-       document.getElementById('fieldline').setAttribute("mline__"+u,"path:"+path+";color: yellow;visible:true");
+        
+			   //fieldlines.children[u].setAttribute("mline","path:"+path+";color: yellow;visible:true");
+			   document.getElementById('fieldline').setAttribute("mline__"+u,"path:"+path+";color: yellow;visible:true");
  			   
       }else{
         document.getElementById('fieldline').setAttribute("mline__"+u,{visible:false,});
@@ -122,6 +123,7 @@ AFRAME.registerComponent('sources',{
     if(1*linew)thickness=linew;
     markers=this.el.children;
     var nocol=getUrlParameter("bw");
+    nocol=1;
     if(1*nocol){
        for(var m of markers){
           m.children[0].setAttribute("material","color","grey");
@@ -172,73 +174,24 @@ AFRAME.registerComponent('sources',{
     }
     mkfields();
   }
-});
-  var potDist=0;
-  var millikan,poti;
-  var milliLoc=new THREE.Vector3();
-  var potiLoc=new THREE.Vector3();
-  var disp;
-AFRAME.registerComponent('millikan',{
-  init: function(){
-    poti=document.getElementById("potentiometer").object3D;
-    millikan=document.getElementById("millikan").object3D;
-    disp=document.getElementById("disp");
-  },
-  tick: function(){
-    if(millikan.visible==true&&poti.visible==true){
-      var potVec=document.getElementById("millikan").object3D.getWorldPosition(milliLoc);
-      milliLoc=potVec;
-      potVec.sub(poti.getWorldPosition(potiLoc));
-      potDist=potVec.length();
-      potDist-=1.7;
-      potDist/=2;
-      potDist*=6;
-      potDist=Math.min(potDist,6);
-      potDist=Math.max(potDist,0);
-//      disp.setAttribute("value",Math.floor(100*potDist).pad(3)+"V");
-disp.setAttribute("value",Math.floor(-poti.rotation.y/3.14*180).pad(4)+"V");
-document.getElementById("fixed").object3D.rotation.y=-poti.rotation.y+Math.PI/2;
-    }else{
-      
-    }
-  }
-
-});
-Number.prototype.pad = function(size) {
-    var s = String(this);
-    let sign=s<0;
-    if(sign){s=s.slice(1);size--;}
-    while (s.length < (size || 2)) {s = "0" + s;}
-    return sign?"-"+s:s;
-}
+})
 </script>
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene stats embedded renderer="logarithmicDepthBuffer: false; colorManagement: true; sortObjects: true;" arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63"><!-- 4x4_BCH_13_5_5 -->
-		<a-entity millikan id="markers">
-	 	
-	 	 <a-marker smooth="true" id="potentiometer" charge=-1 type='barcode' value='1'>
-	 	<!--   <a-box  depth=1 height=0.33 width=1 position="0 .165 0" rotation="0 90 0" material="color:grey;opacity:1;"></a-box>-->
-	 	  <a-cylinder id=knob radius=0.35 height=.2 position="0 .1 0" material="color:#444444;"></a-cylinder>
-	 	  <a-cylinder radius=1. height=.01 position="0 -.06 0" material="color:#666666;"></a-cylinder>
-	 	   <a-box depth=0.26 width=.01 height=0.2 color="#d00000" rotation="0 0 0" position="0 0.105 0.225"></a-box>
-	 	   <a-entity id="fixed"> 
-	 	   <a-text value="0V" position="-1 0 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="green" ></a-text>
-	 	   <a-entity>
- 	   	</a-marker>
-	 	 <a-marker smooth="true" id="millikan" charge=1 type='barcode' value='0'>
-	 	   <a-cylinder radius=0.2 height=1.92 position="0 .96 0" material="color:silver;metalness:0.5;"></a-cylinder>
-	 	   <a-cylinder radius=1 height=0.1 position="0 1.95 0" material="color:silver;metalness:0.5;"></a-cylinder>
-	 	   <a-cylinder radius=1 height=0.1 position="0 3.05 0" material="color:silver;metalness:0.5;"></a-cylinder>
-	 	   <a-entity rotation="80 0 0">
-	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
-	 	   <a-entity>
-	 	   <a-text id="disp" value="000V" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
-	 	 </a-marker>
+	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63'><!-- 4x4_BCH_13_5_5 -->
+		<a-entity sources id="markers">
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='0'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='1'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='2'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='3'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='4'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='5'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=1 type='barcode' value='6'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=120 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker" charge=-1 type='barcode' value='7'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=120 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
 		</a-entity>
 		<a-entity id="fieldline" mline="label:'gt';path: -200 -0.8 -10,-200 0.8 -5,-200 0.8 -5;color:red;opacity:1;visible:false;"></a-entity>
-		<a-entity camera id="cam"></a-entity>
+		<a-entity camera></a-entity>
 		<a-entity light="type: ambient; color: #DDD"></a-entity>
 		<a-entity light="type: directional; color: #DFD; intensity: 0.8" position="-0.5 1 1"></a-entity>
 	</a-scene>
