@@ -116,6 +116,59 @@ function mkfields(){
     }
 }
 
+AFRAME.registerComponent('drawruler',{
+  init: function(){
+    let ruler=document.getElementById("ruler");
+    let n=0;
+    for(let i=.71;i<1.4;i+=0.02){
+      let len=0.015;
+      if(n%10==0&&n>1){len*=1.8;}
+      ruler.setAttribute("line__"+(++n),"start: "+len+" "+i+" 0; end: "+(-len)+" "+i+" 0; color: black;");
+    }
+  }
+});
+
+AFRAME.registerComponent('chargeddroplet',{
+  init: function(){
+      this.el.object3D.position.y=1;
+ //     this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
+      this.el.setAttribute("radius",(Math.random()-0.5)*2e-2+3e-2);
+      this.el.setAttribute("charge", Math.floor((Math.random() * 5) +1));
+  },
+  tick: function(){
+  let viscosity=18.5e-6;
+  let g=9.81;
+  let rho=0.877;
+  let r=this.el.getAttribute("radius")*1e-4;
+  let mass=rho*4/3*Math.PI*Math.pow(r,3);
+  let q=1.602e-19*this.el.getAttribute("charge");
+
+  let rotation = new THREE.Euler().copy(poti.rotation);
+  if(rotation.x>0&&rotation.x<Math.PI/2){
+    rotation.y=Math.PI-rotation.y;
+  }  
+  let voltage=  .5*(rotation.y/3.14*180-135)+90;
+  let platedistance=.01;
+  let staticForce=-mass*g+q*voltage/platedistance;
+  
+  let v=staticForce/(6*Math.PI*viscosity*r);
+  //Friction: 6*pi*eta*r*v
+  //Gravity: -4/3*pi*r³*g
+  //Electric Force: q*E resp. q*U/d (E: Magnitude of Electric Field in Volts/meter)
+  
+  //terminal velocity: v=2*r²*rho*g/(9*eta)
+  //Forces Balanced: U=4/3*pi*r³*g*d/q
+//  console.log(v,voltage,staticForce,q);
+  this.el.object3D.position.y+=v*1e2;
+    if(this.el.object3D.position.y<0.65||this.el.object3D.position.y>1.4){
+      this.el.object3D.position.y=1;
+//      this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
+      this.el.setAttribute("radius",(Math.random()-0.5)*2e-2+3e-2);
+      this.el.setAttribute("charge", Math.floor((Math.random() * 5) +1));
+    }
+  }
+});
+
 AFRAME.registerComponent('sources',{
   init: function(){
     var linew=getUrlParameter("lw");
@@ -196,8 +249,14 @@ AFRAME.registerComponent('millikan',{
       potDist=Math.min(potDist,6);
       potDist=Math.max(potDist,0);
 //      disp.setAttribute("value",Math.floor(100*potDist).pad(3)+"V");
-disp.setAttribute("value",Math.floor(-poti.rotation.y/3.14*180).pad(4)+"V");
-document.getElementById("fixed").object3D.rotation.y=-poti.rotation.y+Math.PI/2;
+let rotation = new THREE.Euler().copy(poti.rotation);
+//rotation=poti.rotation.copy();
+if(rotation.x>0&&rotation.x<Math.PI/2){
+rotation.y=Math.PI-rotation.y;
+}
+disp.setAttribute("value",Math.floor(.5*(rotation.y/3.14*180-135)+90).pad(4)+"V");
+document.getElementById("fixed").object3D.rotation.y=(rotation.y-Math.PI/4);
+//document.getElementById("disp2").setAttribute("value",poti.rotation.y.toFixed(2)+"\n"+poti.rotation.z.toFixed(2)+"\n"+poti.rotation.x.toFixed(2));
     }else{
       
     }
@@ -218,23 +277,50 @@ Number.prototype.pad = function(size) {
 	<a-scene stats embedded renderer="logarithmicDepthBuffer: false; colorManagement: true; sortObjects: true;" arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63"><!-- 4x4_BCH_13_5_5 -->
 		<a-entity millikan id="markers">
 	 	
-	 	 <a-marker smooth="true" id="potentiometer" charge=-1 type='barcode' value='1'>
+	 	 <a-marker smooth="0" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='1'>
 	 	<!--   <a-box  depth=1 height=0.33 width=1 position="0 .165 0" rotation="0 90 0" material="color:grey;opacity:1;"></a-box>-->
+	 	<a-entity scale="0.85 0.85 0.85">
 	 	  <a-cylinder id=knob radius=0.35 height=.2 position="0 .1 0" material="color:#444444;"></a-cylinder>
-	 	  <a-cylinder radius=1. height=.01 position="0 -.06 0" material="color:#666666;"></a-cylinder>
-	 	   <a-box depth=0.26 width=.01 height=0.2 color="#d00000" rotation="0 0 0" position="0 0.105 0.225"></a-box>
+	 	  <a-torus radius=0.35 position="0 00 0" radius-tubular=0.0025 color=#d00000 rotation="90 0 0"></a-torus>
+	 	  <a-cylinder radius=.9 height=.01 position="0 -.06 0" material="color:#666666;"></a-cylinder>
+	 	   <a-box depth=0.26 width=.01 height=0.2 color="#d00000" rotation="0 0 0" position="0 0.105 -0.225"></a-box>
 	 	   <a-entity id="fixed"> 
-	 	   <a-text value="0V" position="-1 0 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="green" ></a-text>
-	 	   <a-entity>
+	 	   <a-entity rotation="0 -50 0">
+		 	   <a-text value="25" position="-0.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   <a-entity rotation="0 -100 0">
+		 	   <a-text value="50" position="-.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   <a-entity rotation="0 -150 0">
+		 	   <a-text value="75" position="-.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   <a-entity rotation="0 -200 0">
+		 	   <a-text value="100" position="-.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   <a-entity rotation="0 -250 0">
+		 	   <a-text value="125" position="-.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   <a-entity rotation="0 -300 0">
+		 	   <a-text value="150" position="-.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   <a-text id="disp2" value="0V" position="-.8 0 0" scale="1 1 1" rotation="-90 0 0" color="#dddddd"  ></a-text>
+	 	   </a-entity>
+	 	   </a-entity>
  	   	</a-marker>
-	 	 <a-marker smooth="true" id="millikan" charge=1 type='barcode' value='0'>
-	 	   <a-cylinder radius=0.2 height=1.92 position="0 .96 0" material="color:silver;metalness:0.5;"></a-cylinder>
-	 	   <a-cylinder radius=1 height=0.1 position="0 1.95 0" material="color:silver;metalness:0.5;"></a-cylinder>
-	 	   <a-cylinder radius=1 height=0.1 position="0 3.05 0" material="color:silver;metalness:0.5;"></a-cylinder>
+	 	 <a-marker smooth="true" id="millikan" charge=1 type='barcode' value='3'>
+	 	 <a-entity  scale=" 0.8 0.8 0.8">
+	 	   <a-cylinder radius=0.2 height=.62 position="0 .33 0" material="color:silver;metalness:0.5;"></a-cylinder>
+	 	   <a-cylinder radius=.6 height=0.05 position="0 .65 0" material="color:silver;metalness:0.5;"></a-cylinder>
+	 	   <a-cylinder radius=.6 height=0.05 position="0 1.5 0" material="color:silver;metalness:0.5;opacity:0.5;"></a-cylinder>
 	 	   <a-entity rotation="80 0 0">
 	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
-	 	   <a-entity>
-	 	   <a-text id="disp" value="000V" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
+	 	    <a-text id="disp" value="000V" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
+	 	   </a-entity>
+		<a-entity id="droplets">
+		    <a-sphere chargeddroplet class="drop" radius=".001" charge="0" material="color:yellow;opacity:0.995;" radius=0.005 position="0 1 0" ></a-sphere>
+		</a-entity>
+	 	  <a-entity drawruler id="ruler" line="start: 0  0.7  0; end: 0 1.41 0; color: black"></a-entity>
+	 	  </a-entity>
 	 	 </a-marker>
 		</a-entity>
 		<a-entity id="fieldline" mline="label:'gt';path: -200 -0.8 -10,-200 0.8 -5,-200 0.8 -5;color:red;opacity:1;visible:false;"></a-entity>
