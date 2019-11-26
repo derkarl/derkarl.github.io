@@ -133,7 +133,7 @@ AFRAME.registerComponent('chargeddroplet',{
   init: function(){
       this.el.object3D.position.y=1;
  //     this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
-      this.el.setAttribute("radius",(Math.random()-0.5)*2e-2+3e-2);
+      this.el.setAttribute("radius",(Math.random()-0.2)*2e-2+3.2e-2);
       this.el.setAttribute("charge", Math.floor((Math.random() * 5) +1));
   },
   tick: function(){
@@ -164,7 +164,7 @@ AFRAME.registerComponent('chargeddroplet',{
     if(this.el.object3D.position.y<0.65||this.el.object3D.position.y>1.4){
       this.el.object3D.position.y=1;
 //      this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
-      this.el.setAttribute("radius",(Math.random()-0.5)*2e-2+3e-2);
+      this.el.setAttribute("radius",(Math.random()-0.2)*2e-2+3.2e-2);
       this.el.setAttribute("charge", Math.floor((Math.random() * 5) +1));
     }
   }
@@ -358,8 +358,8 @@ AFRAME.registerComponent('infotafel',{
 		</a-marker>	 	
 	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='5'>
 	 	   <a-entity rotation="80 0 0">
-	 	   <a-box depth=1.2 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 -0.6"></a-box>
-	 	    <a-text infotafel value="-M5-" position="-0.45 0.37 -.9" scale="1. 1. 1." rotation="-90 0 0" color="red" ></a-text>
+	 	   <a-box depth=1.2 width=1 height=0.02 color="#ddddd0" rotation="0 0 0" position="0 0.35 -0.6"></a-box>
+	 	    <a-text infotafel value="-M5-" position="-0.45 0.37 -.9" scale=".9 .9 .9" rotation="-90 0 0" color="#15151b" ></a-text>
 	 	   </a-entity>
 		</a-marker>
 		</a-entity>
