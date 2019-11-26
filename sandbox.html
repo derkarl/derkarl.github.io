@@ -131,12 +131,15 @@ AFRAME.registerComponent('drawruler',{
 
 AFRAME.registerComponent('chargeddroplet',{
   init: function(){
+    lastTick=Date.now();
       this.el.object3D.position.y=1;
  //     this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
       this.el.setAttribute("radius",(Math.random()-0.2)*2e-2+3.2e-2);
       this.el.setAttribute("charge", Math.floor((Math.random() * 5) +1));
   },
   tick: function(){
+  let deltat=Date.now()-lastTick;
+  lastTick=Date.now();
   let viscosity=18.5e-6;
   let g=9.81;
   let rho=0.877;
@@ -160,7 +163,7 @@ AFRAME.registerComponent('chargeddroplet',{
   //terminal velocity: v=2*r²*rho*g/(9*eta)
   //Forces Balanced: U=4/3*pi*r³*g*d/q
 //  console.log(v,voltage,staticForce,q);
-  this.el.object3D.position.y+=v*1e2;
+  this.el.object3D.position.y+=deltat*v*20;
     if(this.el.object3D.position.y<0.65||this.el.object3D.position.y>1.4){
       this.el.object3D.position.y=1;
 //      this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
@@ -232,6 +235,7 @@ AFRAME.registerComponent('sources',{
   var milliLoc=new THREE.Vector3();
   var potiLoc=new THREE.Vector3();
   var disp;
+  var lastTick;
 AFRAME.registerComponent('millikan',{
   init: function(){
     poti=document.getElementById("potentiometer").object3D;
