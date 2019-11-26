@@ -271,14 +271,29 @@ Number.prototype.pad = function(size) {
     while (s.length < (size || 2)) {s = "0" + s;}
     return sign?"-"+s:s;
 }
+
+AFRAME.registerComponent('infotafel',{
+  init: function(){
+  console.log("Infotafel wird fertig gemacht…");
+  this.el.setAttribute("value","INFO");
+  },
+  tick: function(){
+  let infotext="";
+  let drop=document.getElementsByClassName("drop")[0];
+  infotext+="r="+((drop.getAttribute("radius")*100).toFixed(2))+"mu\n";
+  infotext+="q="+(Math.round(drop.getAttribute("charge")))+"·e\n";
+  this.el.setAttribute("value",infotext);
+  },
+});
 </script>
 
   </head>
 <body style='margin : 0px; overflow: hidden;'>
-	<a-scene stats embedded renderer="logarithmicDepthBuffer: false; colorManagement: true; sortObjects: true;" arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63"><!-- 4x4_BCH_13_5_5 -->
+	<a-scene embedded renderer="logarithmicDepthBuffer: false; colorManagement: true; sortObjects: true;" arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_HAMMING63"><!-- 4x4_BCH_13_5_5 -->
 		<a-entity millikan id="markers">
-	 	
-	 	 <a-marker smooth="0" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='1'>
+	 	 	 	
+		 	
+	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='1'>
 	 	<!--   <a-box  depth=1 height=0.33 width=1 position="0 .165 0" rotation="0 90 0" material="color:grey;opacity:1;"></a-box>-->
 	 	<a-entity scale="0.85 0.85 0.85">
 	 	  <a-cylinder id=knob radius=0.35 height=.2 position="0 .1 0" material="color:#444444;"></a-cylinder>
@@ -318,11 +333,35 @@ Number.prototype.pad = function(size) {
 	 	    <a-text id="disp" value="000V" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
 	 	   </a-entity>
 		<a-entity id="droplets">
-		    <a-sphere chargeddroplet class="drop" radius=".001" charge="0" material="color:orange;opacity:0.95;" radius=0.005 position="0 1 0" ></a-sphere>
+		    <a-sphere chargeddroplet class="drop" radius=".001" charge="0" material="metalness:0.7;color:orange;opacity:0.95;" radius=0.005 position="0 1 0" ></a-sphere>
 		</a-entity>
 	 	  <a-entity drawruler id="ruler" line="start: 0  0.7  0; end: 0 1.41 0; color: black"></a-entity>
 	 	  </a-entity>
 	 	 </a-marker>
+	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='0'>
+	 	   <a-entity rotation="80 0 0">
+	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
+	 	    <a-text id="" value=" 0  " position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
+	 	   </a-entity>
+		</a-marker>	 	
+	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='2'>
+	 	   <a-entity rotation="80 0 0">
+	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
+	 	    <a-text id="" value=" 2  " position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
+	 	   </a-entity>
+		</a-marker>	 	
+	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='4'>
+	 	   <a-entity rotation="80 0 0">
+	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
+	 	    <a-text id="" value="-M4-" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
+	 	   </a-entity>
+		</a-marker>	 	
+	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='5'>
+	 	   <a-entity rotation="80 0 0">
+	 	   <a-box depth=1.2 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 -0.6"></a-box>
+	 	    <a-text infotafel value="-M5-" position="-0.45 0.37 -.9" scale="1. 1. 1." rotation="-90 0 0" color="red" ></a-text>
+	 	   </a-entity>
+		</a-marker>
 		</a-entity>
 		<a-entity id="fieldline" mline="label:'gt';path: -200 -0.8 -10,-200 0.8 -5,-200 0.8 -5;color:red;opacity:1;visible:false;"></a-entity>
 		<a-entity camera id="cam"></a-entity>
