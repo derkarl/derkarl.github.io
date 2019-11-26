@@ -9,6 +9,7 @@
 <!-- <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/ar.js@2.0.8/aframe/build/aframe-ar.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>-->
+<script src="https://github.com/etiennepinchon/aframe-refraction/raw/master/dist/aframe-refraction-component.min.js"></script>
 <script src="aframe-look-at-billboard-component.min.js"></script>
 <script src="mline.js"></script>
  <script>
@@ -317,7 +318,7 @@ Number.prototype.pad = function(size) {
 	 	    <a-text id="disp" value="000V" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
 	 	   </a-entity>
 		<a-entity id="droplets">
-		    <a-sphere chargeddroplet class="drop" radius=".001" charge="0" material="color:yellow;opacity:0.995;" radius=0.005 position="0 1 0" ></a-sphere>
+		    <a-sphere chargeddroplet refraction class="drop" radius=".001" charge="0" material="color:yellow;opacity:0.5;" radius=0.005 position="0 1 0" ></a-sphere>
 		</a-entity>
 	 	  <a-entity drawruler id="ruler" line="start: 0  0.7  0; end: 0 1.41 0; color: black"></a-entity>
 	 	  </a-entity>
