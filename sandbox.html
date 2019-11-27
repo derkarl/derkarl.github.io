@@ -303,6 +303,7 @@ AFRAME.registerComponent('infotafel',{
 //  infotext+="r="+((drop.getAttribute("radius")*100).toFixed(2))+"mu\n";
 //  infotext+="q="+(Math.round(drop.getAttribute("charge")))+"·e\n";
   infotext+="v="+(Math.pow(drop.getAttribute("velocity"),1)).toExponential(1)+"m/s\n";
+  infotext+="d=1cm\n";
   infotext+="rho=\n0.877g/ml\n";
   this.el.setAttribute("value",infotext);
   },
