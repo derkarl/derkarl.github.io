@@ -164,6 +164,7 @@ AFRAME.registerComponent('chargeddroplet',{
   //Forces Balanced: U=4/3*pi*r³*g*d/q
 //  console.log(v,voltage,staticForce,q);
   this.el.object3D.position.y+=deltat*v*20;
+  this.el.setAttribute("velocity",""+v);
     if(this.el.object3D.position.y<0.65||this.el.object3D.position.y>1.4){
       this.el.object3D.position.y=1;
 //      this.el.setAttribute("velocity",(Math.random()-0.5)*0.001);
@@ -276,7 +277,7 @@ Number.prototype.pad = function(size) {
     return sign?"-"+s:s;
 }
 
-AFRAME.registerComponent('infotafel',{
+AFRAME.registerComponent('lehrerinfo',{
   init: function(){
   console.log("Infotafel wird fertig gemacht…");
   this.el.setAttribute("value","INFO");
@@ -286,6 +287,23 @@ AFRAME.registerComponent('infotafel',{
   let drop=document.getElementsByClassName("drop")[0];
   infotext+="r="+((drop.getAttribute("radius")*100).toFixed(2))+"mu\n";
   infotext+="q="+(Math.round(drop.getAttribute("charge")))+"·e\n";
+  infotext+="v="+(Math.pow(drop.getAttribute("velocity"),1)).toExponential(1)+"m/s\n";
+  infotext+="rho=\n0.877g/ml\n";
+  this.el.setAttribute("value",infotext);
+  },
+});
+AFRAME.registerComponent('infotafel',{
+  init: function(){
+  console.log("Infotafel wird fertig gemacht…");
+  this.el.setAttribute("value","INFO");
+  },
+  tick: function(){
+  let infotext="";
+  let drop=document.getElementsByClassName("drop")[0];
+//  infotext+="r="+((drop.getAttribute("radius")*100).toFixed(2))+"mu\n";
+//  infotext+="q="+(Math.round(drop.getAttribute("charge")))+"·e\n";
+  infotext+="v="+(Math.pow(drop.getAttribute("velocity"),1)).toExponential(1)+"m/s\n";
+  infotext+="rho=\n0.877g/ml\n";
   this.el.setAttribute("value",infotext);
   },
 });
@@ -337,33 +355,33 @@ AFRAME.registerComponent('infotafel',{
 	 	    <a-text id="disp" value="000V" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
 	 	   </a-entity>
 		<a-entity id="droplets">
-		    <a-sphere chargeddroplet class="drop" radius=".001" charge="0" material="metalness:0.7;color:orange;opacity:0.95;" radius=0.005 position="0 1 0" ></a-sphere>
+		    <a-sphere chargeddroplet class="drop" velocity="2" radius=".001" charge="0" material="metalness:0.7;color:orange;opacity:0.95;" radius=0.005 position="0 1 0" ></a-sphere>
 		</a-entity>
 	 	  <a-entity drawruler id="ruler" line="start: 0  0.7  0; end: 0 1.41 0; color: black"></a-entity>
 	 	  </a-entity>
 	 	 </a-marker>
-	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='0'>
+	 	 <a-marker smooth="false" id="otentiomer" scale="1 1 1" charge=-1 type='barcode' value='0'>
 	 	   <a-entity rotation="80 0 0">
 	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
 	 	    <a-text id="" value=" 0  " position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
 	 	   </a-entity>
 		</a-marker>	 	
-	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='2'>
+	 	 <a-marker smooth="false" id="potentioter" scale="1 1 1" charge=-1 type='barcode' value='2'>
 	 	   <a-entity rotation="80 0 0">
 	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
 	 	    <a-text id="" value=" 2  " position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
 	 	   </a-entity>
 		</a-marker>	 	
-	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='4'>
+	 	 <a-marker smooth="false" id="potntieter" scale="1 1 1" charge=-1 type='barcode' value='4'>
 	 	   <a-entity rotation="80 0 0">
 	 	   <a-box depth=0.4 width=1 height=0.02 color="#202020" rotation="0 0 0" position="0 0.35 0"></a-box>
-	 	    <a-text id="" value="-M4-" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
+	 	    <a-text lehrerinfo id="" value="-M4-" position="-0.5 0.37 0" scale="1.5 1.5 1.5" rotation="-90 0 0" color="red" ></a-text>
 	 	   </a-entity>
 		</a-marker>	 	
-	 	 <a-marker smooth="false" id="potentiometer" scale="1 1 1" charge=-1 type='barcode' value='5'>
+	 	 <a-marker smooth="1" id="potentieter" scale="1 1 1" charge=-1 type='barcode' value='5'>
 	 	   <a-entity rotation="80 0 0">
 	 	   <a-box depth=1.2 width=1 height=0.02 color="#ddddd0" rotation="0 0 0" position="0 0.35 -0.6"></a-box>
-	 	    <a-text infotafel value="-M5-" position="-0.45 0.37 -.9" scale=".9 .9 .9" rotation="-90 0 0" color="#15151b" ></a-text>
+	 	    <a-text infotafel value="-M5-" position="-0.45 0.37 -.7" scale=".6 .6 .6" rotation="-90 0 0" color="#15151b" ></a-text>
 	 	   </a-entity>
 		</a-marker>
 		</a-entity>
