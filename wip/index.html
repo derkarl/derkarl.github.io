@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Titel</title>
+<!-- AR.js by @jerome_etienne - github: https://github.com/jeromeetienne/ar.js - info: https://medium.com/arjs/augmented-reality-in-10-lines-of-html-4e193ea9fdbf -->
+<script src="aframe.min.js"></script>
+<script src="aframe-ar.min.js"></script>
+<script src="mline.js"></script>
+ <script>
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+ </script>
+<script>
+/**
+ * This is from https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+ * @author Mark Amery https://stackoverflow.com/users/1709587/mark-amery
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+/**
+ * @param {String} HTML representing any number of sibling elements
+ * @return {NodeList} 
+ */
+function htmlToElements(html) {
+    var template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content.childNodes;
+}
+</script>
+
+<script>
+var chargpos=new Array();
+var charges=new Array();
+var charges;
+var flsrc=new Array();
+var distSquared=new Array();
+var numMarkers,myCharge;
+var rl=new THREE.Vector3;
+var worker=new THREE.Vector3();
+var step=.1;
+var tickCount=0;
+var totalforce=new THREE.Vector3();
+var markers=new Array();
+var path="";
+var startl,endl;
+var fieldlines;
+var thickness=1;
+
+function minimum2(arr){
+  var i=0;
+  var m;
+  while(m===undefined&&i<arr.length){
+    m=arr[i];
+    i++;
+  }
+  if(m===undefined)return m;
+  for(;i<arr.length;i++){
+    if(!(Math.min(m,arr[i])===NaN)){m=Math.min(m,arr[i]);}
+  }
+  return m;
+}
+
+
+function mkfields(){
+    for (var u=0; u<flsrc.length; u++) {
+      worker.copy(flsrc[u]);
+      worker.add(chargpos[Math.floor(u/12)]); //offset by charge
+ 
+      for (var n=0; n<chargpos.length; n++) {
+        distSquared[n]=worker.distanceToSquared(chargpos[n]);
+      }
+      myCharge=charges[distSquared.indexOf(Math.min.apply(null, distSquared))];
+      if(myCharge!=0){//marker is visible
+      path=""+worker.x.toFixed(4)+ " "+worker.y.toFixed(4)+" "+worker.z.toFixed(4);
+       for (var i=0; (i<200&&minimum2(distSquared)>0.08); i++) {//&&minimum2(distSquared)>0.24
+         totalforce.set(0, 0, 0);
+          for (var k=0; k<chargpos.length; k++) {
+            distSquared[k]=worker.distanceToSquared(chargpos[k]);
+            F=1/distSquared[k];
+            rl.copy(worker);
+            rl.sub(chargpos[k]);
+            rl.setLength(F);
+            rl.multiplyScalar(charges[k]*myCharge);
+            totalforce.add(rl);
+          }
+          totalforce.setLength(step);
+          worker.add(totalforce);
+          if (i%1==0&&charges[Math.floor(u/12)]!=0) {
+             path=path+", "+worker.x.toFixed(4)+ " "+worker.y.toFixed(4)+" "+worker.z.toFixed(4);
+          }
+          for (var j=0; j<chargpos.length; j++) {
+            distSquared[j]=worker.distanceToSquared(chargpos[j]);
+          }
+        }
+        
+			   //fieldlines.children[u].setAttribute("mline","path:"+path+";color: yellow;visible:true");
+			   document.getElementById('fieldline').setAttribute("mline__"+u,"path:"+path+";color: yellow;visible:true");
+ 			   
+      }else{
+        document.getElementById('fieldline').setAttribute("mline__"+u,{visible:false,});
+      }
+    }
+}
+
+AFRAME.registerComponent('sources',{
+  init: function(){
+    var linew=getUrlParameter("lw");
+    if(1*linew)thickness=linew;
+    markers=this.el.children;
+    var nocol=getUrlParameter("bw");
+    if(1*nocol){
+       for(var m of markers){
+          m.children[0].setAttribute("material","color","grey");
+       }
+    }
+    numMarkers=this.el.children.length;
+    distSquared=new Array(numMarkers);
+
+     for(var marker of markers){
+       charges.push(0);
+       chargpos.push(new THREE.Vector3(0,0,0));
+
+       flsrc.push(new THREE.Vector3( 0.57735026918962576451, -1, -1.5115226281523414610));
+       flsrc.push(new THREE.Vector3(-1.1547005383792515290, 0, -1.5115226281523414610));
+       flsrc.push(new THREE.Vector3( 0.57735026918962576451, 1, -1.5115226281523414610));
+
+       flsrc.push(new THREE.Vector3(-0.93417235896271569645, -1.6180339887498948482, -0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(1.8683447179254313929, 0, -0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(-0.93417235896271569645, 1.6180339887498948482, -0.35682208977308993194));
+
+       flsrc.push(new THREE.Vector3( 0.93417235896271569645, -1.6180339887498948482, 0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(-1.8683447179254313929, 0, 0.35682208977308993194));
+       flsrc.push(new THREE.Vector3(0.93417235896271569645, 1.6180339887498948482, 0.35682208977308993194));
+
+       flsrc.push(new THREE.Vector3(-0.57735026918962576451, -1, 1.5115226281523414610));
+       flsrc.push(new THREE.Vector3(1.1547005383792515290, 0, 1.5115226281523414610));
+       flsrc.push(new THREE.Vector3(-0.57735026918962576451, 1, 1.5115226281523414610));/*
+flsrc.push(new THREE.Vector3(0.0, 1.5, 0));
+flsrc.push(new THREE.Vector3(0.7499999999999999, 1.299038105676658, 0));
+flsrc.push(new THREE.Vector3(1.299038105676658, 0.7500000000000002, 0));
+flsrc.push(new THREE.Vector3(1.5, 9.184850993605148e-17, 0));
+flsrc.push(new THREE.Vector3(1.299038105676658, -0.7499999999999997, 0));
+flsrc.push(new THREE.Vector3(0.7499999999999999, -1.299038105676658, 0));
+flsrc.push(new THREE.Vector3(1.8369701987210297e-16, -1.5, 0));
+flsrc.push(new THREE.Vector3(-0.7500000000000002, -1.299038105676658, 0));
+flsrc.push(new THREE.Vector3(-1.2990381056766576, -0.7500000000000007, 0));
+flsrc.push(new THREE.Vector3(-1.5, -2.755455298081545e-16, 0));
+flsrc.push(new THREE.Vector3(-1.299038105676658, 0.7500000000000002, 0));
+flsrc.push(new THREE.Vector3(-0.7500000000000007, 1.2990381056766576, 0));*/
+    }
+    for(var v of flsrc){
+      v.setLength(0.3);
+    }
+    
+  },
+  
+  tick: function(){
+    tickCount++;
+    tickCount=tickCount%2;
+    if(tickCount==0)return;
+    var i=0;
+    for(var i=0;i<this.el.children.length;i++){
+       if(this.el.children[i].getAttribute("visible")==true){
+         chargpos[i].copy(this.el.children[i].object3D.getWorldPosition(new THREE.Vector3()));
+         charges[i]=(this.el.children[i].getAttribute("charge"));
+       }else{
+         charges[i]=0;
+         chargpos[i].set(0,0,0);
+       }
+    }
+    mkfields();
+  }
+})
+</script>
+
+  </head>
+<body style='margin : 0px; overflow: hidden;'>
+	<a-scene vr-mode-ui="enabled: false" embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3_PARITY65'><!-- 3x3_HAMMING63  4x4_BCH_13_5_5 -->
+		<a-entity sources id="markers">
+	 	 <a-marker smooth="true" id="myMarker1" charge=1 type='barcode' value='0'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker2" charge=-1 type='barcode' value='1'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker3" charge=1 type='barcode' value='2'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker4" charge=-1 type='barcode' value='3'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker5" charge=1 type='barcode' value='4'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker6" charge=-1 type='barcode' value='5'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker7" charge=1 type='barcode' value='6'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker8" charge=-1 type='barcode' value='7'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker9" charge=1 type='barcode' value='8'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarkera" charge=-1 type='barcode' value='9'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarkerb" charge=1 type='barcode' value='10'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarkerc" charge=-1 type='barcode' value='11'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarkerd" charge=1 type='barcode' value='12'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarkere" charge=-1 type='barcode' value='13'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarkerf" charge=1 type='barcode' value='14'><a-sphere radius=0.3 segments-height=12 segments-width=24 theta-length=160 position="0 0 0" material="color:red;opacity:1;"></a-sphere></a-marker>
+	 	 <a-marker smooth="true" id="myMarker0" charge=-1 type='barcode' value='15'><a-sphere radius=0.3 segments-height=12 segments-width=24  theta-length=160 position="0 0 0" material="color:blue;opacity:1;"></a-sphere></a-marker>
+	 	</a-entity>
+		<a-entity id="fieldline" mline="label:'gt';path: -200 -0.8 -10,-200 0.8 -5,-200 0.8 -5;color:red;opacity:1;visible:false;"></a-entity>
+		<a-entity camera></a-entity>
+		<a-entity light="type: ambient; color: #DDD"></a-entity>
+		<a-entity light="type: directional; color: #DFD; intensity: 0.8" position="-0.5 1 1"></a-entity>
+	</a-scene>
+</body>
+</html>
